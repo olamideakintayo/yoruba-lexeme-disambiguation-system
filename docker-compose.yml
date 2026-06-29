@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: yoruba_lexeme_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: yoruba_lexeme
+      POSTGRES_USER: yoruba
+      POSTGRES_PASSWORD: yoruba
+    ports:
+      - "55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yoruba -d yoruba_lexeme"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:

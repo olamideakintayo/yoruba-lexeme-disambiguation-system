@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.pyc
+.env
+node_modules/
+dist/
+coverage/
+.DS_Store
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+backend/data/ocr-smoke-page*.png
