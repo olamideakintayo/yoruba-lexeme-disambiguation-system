@@ -18,7 +18,7 @@ python -m venv .venv
 pip install -r requirements.txt
 alembic upgrade head
 python -m app.seed
-uvicorn app.main:app --reload
+python -m app.server
 ```
 
 In another terminal:
@@ -32,6 +32,17 @@ npm run dev
 Frontend: http://localhost:5173  
 Backend API: http://localhost:8000/docs
 PostgreSQL: localhost:55432
+
+## Deployment
+
+Recommended deployment:
+
+- FastAPI backend on Render
+- PostgreSQL on Render managed Postgres
+- React frontend on Vercel
+- Vercel calling the Render HTTPS backend URL
+
+See [deploy/render.md](deploy/render.md) for the Render + Vercel setup.
 
 ## Dictionary Import
 
