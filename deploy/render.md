@@ -18,6 +18,8 @@ Use Render for the FastAPI backend and managed PostgreSQL. Use Vercel for the Re
 
 Render provides `DATABASE_URL` automatically from the managed PostgreSQL database. The backend converts Render's `postgresql://` URL into SQLAlchemy's async `postgresql+psycopg://` format at startup.
 
+The deployment pins Python to `3.11.9` through `render.yaml` and `.python-version` files. This avoids Python 3.14 build failures from compiled dependencies such as `greenlet`.
+
 ## Backend URL
 
 After deploy, Render gives a backend URL like:
