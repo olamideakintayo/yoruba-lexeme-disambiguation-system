@@ -46,6 +46,8 @@ Create a Vercel project from the same GitHub repo:
   VITE_API_BASE_URL=https://yoruba-lexeme-api.onrender.com
   ```
 
+If Vercel asks for a multi-service `vercel.json`, do not use the backend service template. The backend is deployed on Render, so Vercel should deploy only the `frontend` project. This repo includes `frontend/vercel.json` for the Vite frontend.
+
 Deploy the frontend. Then copy the final Vercel URL back into Render as:
 
 ```env
