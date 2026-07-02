@@ -6,8 +6,8 @@ from app.config import get_settings
 from app.database import get_session
 from app.keyboard import CONTROL_KEYS, TONE_KEYS, YORUBA_ALPHABET
 from app.normalization import normalize_lookup
-from app.repository import get_lexeme, import_jsonl, search_lexemes
-from app.schemas import KeyboardResponse, LexemeRead, SearchResponse, SearchResult
+from app.repository import YORUBA_ONLY_ERROR, get_lexeme, import_jsonl, search_tone_variants
+from app.schemas import KeyboardResponse, LexemeRead, SearchResponse, ToneVariantResult
 
 settings = get_settings()
 
@@ -41,18 +41,13 @@ async def search(
     q: str = Query(..., min_length=1, max_length=160),
     session: AsyncSession = Depends(get_session),
 ) -> SearchResponse:
-    ranked, suggestions = await search_lexemes(session, q)
+    results, suggestions = await search_tone_variants(session, q)
+    if not results:
+        raise HTTPException(status_code=400, detail=YORUBA_ONLY_ERROR)
     return SearchResponse(
         query=q,
         normalized_query=normalize_lookup(q),
-        results=[
-            SearchResult(
-                lexeme=LexemeRead.model_validate(item["lexeme"]),
-                rank=item["rank"],
-                match_type=item["match_type"],
-            )
-            for item in ranked
-        ],
+        results=[ToneVariantResult.model_validate(item) for item in results],
         suggestions=suggestions,
     )
 
@@ -62,7 +57,7 @@ async def suggestions(
     q: str = Query(..., min_length=1, max_length=160),
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, list[str]]:
-    _, values = await search_lexemes(session, q, limit=8)
+    _, values = await search_tone_variants(session, q, limit=8)
     return {"suggestions": values}
 
 

@@ -1,5 +1,5 @@
 import { Search } from 'lucide-react';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { getKeyboard, searchLexemes } from './api';
 import { Results } from './components/Results';
 import { Scene } from './components/Scene';
@@ -19,6 +19,16 @@ function App() {
     getKeyboard().then(setKeyboard).catch(() => setKeyboard(null));
   }, []);
 
+  useEffect(() => {
+    function stopUnexpectedSubmit(event: SubmitEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    window.addEventListener('submit', stopUnexpectedSubmit, true);
+    return () => window.removeEventListener('submit', stopUnexpectedSubmit, true);
+  }, []);
+
   const suggestions = useMemo(() => response?.suggestions ?? [], [response]);
 
   async function runSearch(nextQuery: string) {
@@ -31,13 +41,15 @@ function App() {
       setResponse(data);
       setRecent((items) => [trimmed, ...items.filter((item) => item !== trimmed)].slice(0, 6));
     } catch (err) {
+      setResponse(null);
       setError(err instanceof Error ? err.message : 'Search failed');
     } finally {
       setLoading(false);
     }
   }
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSearchKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== 'Enter') return;
     event.preventDefault();
     void runSearch(query);
   }
@@ -56,28 +68,29 @@ function App() {
         <header className="topbar">
           <div>
             <p className="eyebrow">Yoruba Lexeme Disambiguation</p>
-            <h1>Search Yoruba forms, tones, and meanings</h1>
+            <h1>Search Yoruba words, tones, and meanings</h1>
           </div>
           <span className="status">PostgreSQL · FastAPI · React</span>
         </header>
 
         <section className="workspace">
           <div className="search-panel">
-            <form onSubmit={onSubmit} className="search-form">
+            <div className="search-form">
               <label htmlFor="search">Yoruba word</label>
               <div className="search-row">
                 <input
                   id="search"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
+                  onKeyDown={onSearchKeyDown}
                   placeholder="owo, owó, ọwọ, àpá..."
                   autoComplete="off"
                 />
-                <button type="submit" aria-label="Search">
+                <button type="button" aria-label="Search" onClick={() => void runSearch(query)}>
                   <Search size={20} />
                 </button>
               </div>
-            </form>
+            </div>
 
             <YorubaKeyboard
               keyboard={keyboard}
@@ -112,7 +125,7 @@ function App() {
             {error ? <p className="error">{error}</p> : null}
           </div>
 
-          <Results results={response?.results ?? []} query={response?.query ?? query} loading={loading} />
+          <Results results={response?.results ?? []} query={response?.query ?? query} loading={loading} error={error} />
         </section>
       </section>
     </main>

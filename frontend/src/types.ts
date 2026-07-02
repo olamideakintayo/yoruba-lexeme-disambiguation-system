@@ -31,9 +31,15 @@ export type Lexeme = {
 };
 
 export type SearchResult = {
-  lexeme: Lexeme;
-  rank: number;
-  match_type: string;
+  word: string;
+  normalized_form: string;
+  tone_pattern: string;
+  tone_label: string;
+  meaning: string;
+  meanings: string[];
+  part_of_speech?: string | null;
+  examples: Array<Record<string, string>>;
+  source?: string | null;
 };
 
 export type SearchResponse = {
@@ -41,6 +47,7 @@ export type SearchResponse = {
   normalized_query: string;
   results: SearchResult[];
   suggestions: string[];
+  error?: string | null;
 };
 
 export type KeyboardResponse = {

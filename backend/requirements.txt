@@ -14,7 +14,7 @@ SQLAlchemy==2.0.35
 uvicorn[standard]==0.30.6
 winrt-runtime==3.2.1
 winrt-Windows.Foundation==3.2.1
-winrt-Windows.Graphics.Imaging==3.2.1
+winrt-v Windows.Graphics.Imaging==3.2.1
 winrt-Windows.Media.Ocr==3.2.1
 winrt-Windows.Storage==3.2.1
 winrt-Windows.Storage.Streams==3.2.1

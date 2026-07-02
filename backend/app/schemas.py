@@ -49,11 +49,24 @@ class SearchResult(BaseModel):
     match_type: str
 
 
+class ToneVariantResult(BaseModel):
+    word: str
+    normalized_form: str
+    tone_pattern: str
+    tone_label: str
+    meaning: str
+    meanings: list[str] = Field(default_factory=list)
+    part_of_speech: str | None = None
+    examples: list[dict[str, Any]] = Field(default_factory=list)
+    source: str | None = None
+
+
 class SearchResponse(BaseModel):
     query: str
     normalized_query: str
-    results: list[SearchResult]
+    results: list[ToneVariantResult]
     suggestions: list[str]
+    error: str | None = None
 
 
 class KeyboardResponse(BaseModel):

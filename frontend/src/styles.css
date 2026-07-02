@@ -162,6 +162,11 @@ h1 {
   color: #52645f;
 }
 
+.results-error {
+  color: #a3402d;
+  font-weight: 800;
+}
+
 .key-grid {
   display: grid;
   gap: 7px;
@@ -264,6 +269,51 @@ h1 {
 .result-heading p {
   margin-bottom: 0;
   color: #52645f;
+}
+
+.variant-details {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.variant-details div {
+  border-top: 1px solid #e1e7dd;
+  padding-top: 12px;
+}
+
+.variant-details dt {
+  margin-bottom: 6px;
+  color: #28766f;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.variant-details dd {
+  margin: 0;
+  color: #17211f;
+  line-height: 1.55;
+}
+
+.meaning-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.meaning-list li + li {
+  margin-top: 4px;
+}
+
+.examples {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.source-label {
+  margin: 16px 0 0;
+  color: #28766f;
+  font-weight: 800;
 }
 
 .forms {

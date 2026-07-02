@@ -11,10 +11,15 @@ from sqlalchemy.orm import selectinload
 from app.models import Lexeme, SearchLog, Sense, Source, WordForm, WordFormAlias
 from app.normalization import (
     canonicalize,
+    clean_ocr_display_word,
+    clean_ocr_meaning,
     describe_diacritics,
     detect_tone_pattern,
+    is_displayable_yoruba_word,
     normalize_lookup,
     search_aliases,
+    tone_label,
+    tone_sort_key,
 )
 
 SOURCE_PRIORITY = {
@@ -22,6 +27,9 @@ SOURCE_PRIORITY = {
     "Dictionary of the Yoruba Language": 1,
     "Kaikki/Wiktextract": 2,
 }
+YORUBA_SEARCH_SOURCES = {"Online Yoruba Enrichment", "Dictionary of the Yoruba Language"}
+YORUBA_ONLY_ERROR = "Only Yoruba dictionary words can be searched."
+IGNORED_SEARCH_NORMALIZED_FORMS = {"am", "go"}
 
 POS_LABELS = {
     "n": "noun",
@@ -48,6 +56,46 @@ def normalize_pos(value: str | None) -> str | None:
         return None
     cleaned = value.strip().casefold().rstrip(".")
     return POS_LABELS.get(cleaned, cleaned)
+
+
+def is_ascii_plain_query(value: str) -> bool:
+    stripped = value.strip()
+    return bool(stripped) and stripped.isascii() and stripped.replace(" ", "").replace("-", "").replace("'", "").isalpha()
+
+
+def is_noisy_ocr_word(value: str) -> bool:
+    stripped = value.strip()
+    if len(stripped) > 1 and stripped.isupper():
+        return True
+    return not is_displayable_yoruba_word(stripped)
+
+
+def display_word_for_lexeme(lexeme: Lexeme, normalized_query: str) -> str | None:
+    canonical = canonicalize(lexeme.canonical_form)
+    if not is_noisy_ocr_word(canonical) and normalize_lookup(canonical) == normalized_query:
+        return canonical
+    if (
+        not is_noisy_ocr_word(canonical)
+        and is_displayable_yoruba_word(canonical)
+        and any(form.normalized_form == normalized_query for form in lexeme.word_forms)
+    ):
+        return canonical
+
+    for form in sorted(lexeme.word_forms, key=lambda item: (item.surface_form.islower(), item.surface_form)):
+        surface = canonicalize(form.surface_form)
+        if (
+            form.normalized_form == normalized_query
+            and not is_noisy_ocr_word(surface)
+            and is_displayable_yoruba_word(surface)
+        ):
+            if canonical[:1].isupper() and surface.islower() and not canonical.isupper():
+                return surface.capitalize()
+            return surface
+
+    cleaned = clean_ocr_display_word(canonical)
+    if cleaned and normalize_lookup(cleaned) == normalized_query and is_displayable_yoruba_word(cleaned):
+        return cleaned
+    return None
 
 
 def lexeme_options() -> tuple:
@@ -301,6 +349,89 @@ async def search_lexemes(session: AsyncSession, query: str, limit: int = 20) -> 
     await session.commit()
 
     return ranked, suggestions
+
+
+async def search_tone_variants(session: AsyncSession, query: str, limit: int = 40) -> tuple[list[dict[str, Any]], list[str]]:
+    normalized_query = normalize_lookup(query)
+    if not normalized_query or normalized_query in IGNORED_SEARCH_NORMALIZED_FORMS:
+        return [], []
+
+    source_names = YORUBA_SEARCH_SOURCES
+
+    result = await session.execute(
+        select(Lexeme)
+        .options(*lexeme_options())
+        .join(WordForm)
+        .join(Source)
+        .where(
+            or_(
+                Lexeme.normalized_form == normalized_query,
+                WordForm.normalized_form == normalized_query,
+            ),
+            Source.name.in_(source_names),
+        )
+    )
+    lexemes = result.scalars().unique().all()
+
+    variants_by_word: dict[str, dict[str, Any]] = {}
+    for lexeme in lexemes:
+        word = display_word_for_lexeme(lexeme, normalized_query)
+        if word is None:
+            continue
+
+        pattern = detect_tone_pattern(word)
+        word_key = word.casefold()
+        existing = variants_by_word.get(word_key)
+        if existing is None:
+            existing = {
+                "word": word,
+                "normalized_form": normalized_query,
+                "tone_pattern": pattern,
+                "tone_label": tone_label(word),
+                "meaning": "",
+                "meanings": [],
+                "part_of_speech": None,
+                "examples": [],
+                "source": lexeme.source.name if lexeme.source else None,
+                "source_priority": source_priority(lexeme),
+            }
+            variants_by_word[word_key] = existing
+        elif source_priority(lexeme) < existing["source_priority"]:
+            existing["word"] = word
+            existing["tone_pattern"] = pattern
+            existing["tone_label"] = tone_label(word)
+            existing["source"] = lexeme.source.name if lexeme.source else None
+            existing["source_priority"] = source_priority(lexeme)
+
+        for sense in lexeme.senses:
+            definition = clean_ocr_meaning(sense.definition)
+            if not definition:
+                continue
+            examples = [example for example in (sense.examples or []) if isinstance(example, dict)]
+            if definition not in existing["meanings"]:
+                existing["meanings"].append(definition)
+            if existing["part_of_speech"] is None and sense.part_of_speech:
+                existing["part_of_speech"] = sense.part_of_speech
+            existing["examples"].extend(example for example in examples if example not in existing["examples"])
+
+    variants = list(variants_by_word.values())
+    for item in variants:
+        item["meaning"] = "; ".join(item["meanings"])
+    variants.sort(
+        key=lambda item: (
+            item["source_priority"],
+            tone_sort_key(item["tone_pattern"]),
+            normalize_lookup(item["word"]),
+            item["word"].casefold(),
+        )
+    )
+    variants = variants[:limit]
+    suggestions = list(dict.fromkeys(item["word"] for item in variants))[:8]
+
+    session.add(SearchLog(query=query, normalized_query=normalized_query))
+    await session.commit()
+
+    return variants, suggestions
 
 
 async def get_lexeme(session: AsyncSession, lexeme_id: str) -> Lexeme | None:

@@ -3,3 +3,129 @@
 {"word":"òwò","pos":"noun","forms":[{"form":"owo"},{"form":"òwò"}],"senses":[{"glosses":["trade; commerce; buying and selling"],"examples":[{"text":"Òwò wọn ń lọ dáadáa.","english":"Their trade is going well."}]}]}
 {"word":"àpá","pos":"noun","forms":[{"form":"apa"},{"form":"àpá"}],"senses":[{"glosses":["scar; mark left on the skin after an injury"],"examples":[{"text":"Àpá wà lórí ọwọ́ rẹ.","english":"There is a scar on his hand."}]}]}
 {"word":"apá","pos":"noun","forms":[{"form":"apa"},{"form":"apá"}],"senses":[{"glosses":["side; part; wing or section of a thing"],"examples":[{"text":"Jóko sí apá òsì.","english":"Sit on the left side."}]}]}
+{"word":"bà","pos":"verb","forms":[{"form":"ba"},{"form":"bà"}],"senses":[{"glosses":["to perch; to bend"],"examples":[]}]}
+{"word":"ba","pos":"verb","forms":[{"form":"ba"}],"senses":[{"glosses":["to hide; to lie in wait"],"examples":[]}]}
+{"word":"bá","pos":"verb","forms":[{"form":"ba"},{"form":"bá"}],"senses":[{"glosses":["to meet; to overtake"],"examples":[]}]}
+{"word":"wà","pos":"verb","forms":[{"form":"wa"},{"form":"wà"}],"senses":[{"glosses":["to be; to exist"],"examples":[]}]}
+{"word":"wa","pos":"verb","forms":[{"form":"wa"}],"senses":[{"glosses":["to paddle; to drive"],"examples":[]}]}
+{"word":"wá","pos":"verb","forms":[{"form":"wa"},{"form":"wá"}],"senses":[{"glosses":["to come; to seek"],"examples":[]}]}
+{"word":"kò","pos":"particle","forms":[{"form":"ko"},{"form":"kò"}],"senses":[{"glosses":["not; negation"],"examples":[]}]}
+{"word":"ko","pos":"verb","forms":[{"form":"ko"}],"senses":[{"glosses":["to gather; to encounter"],"examples":[]}]}
+{"word":"kó","pos":"verb","forms":[{"form":"ko"},{"form":"kó"}],"senses":[{"glosses":["to pack; to collect"],"examples":[]}]}
+{"word":"kọ̀","pos":"verb","forms":[{"form":"kọ"},{"form":"kọ̀"}],"senses":[{"glosses":["to refuse; to reject"],"examples":[]}]}
+{"word":"kọ","pos":"verb","forms":[{"form":"kọ"}],"senses":[{"glosses":["to flash; to emit light"],"examples":[]}]}
+{"word":"kọ́","pos":"verb","forms":[{"form":"kọ"},{"form":"kọ́"}],"senses":[{"glosses":["to build; to learn; to teach"],"examples":[]}]}
+{"word":"là","pos":"verb","forms":[{"form":"la"},{"form":"là"}],"senses":[{"glosses":["to split; to survive"],"examples":[]}]}
+{"word":"la","pos":"verb","forms":[{"form":"la"}],"senses":[{"glosses":["to lick"],"examples":[]}]}
+{"word":"lá","pos":"verb","forms":[{"form":"la"},{"form":"lá"}],"senses":[{"glosses":["to lick completely"],"examples":[]}]}
+{"word":"rò","pos":"verb","forms":[{"form":"ro"},{"form":"rò"}],"senses":[{"glosses":["to think"],"examples":[]}]}
+{"word":"ro","pos":"verb","forms":[{"form":"ro"}],"senses":[{"glosses":["to till the ground"],"examples":[]}]}
+{"word":"ró","pos":"verb","forms":[{"form":"ro"},{"form":"ró"}],"senses":[{"glosses":["to stand erect; to tie wrapper"],"examples":[]}]}
+{"word":"tà","pos":"verb","forms":[{"form":"ta"},{"form":"tà"}],"senses":[{"glosses":["to sell"],"examples":[]}]}
+{"word":"ta","pos":"verb","forms":[{"form":"ta"}],"senses":[{"glosses":["to shoot; to spill"],"examples":[]}]}
+{"word":"tá","pos":"verb","forms":[{"form":"ta"},{"form":"tá"}],"senses":[{"glosses":["to fade, as in color"],"examples":[]}]}
+{"word":"lò","pos":"verb","forms":[{"form":"lo"},{"form":"lò"}],"senses":[{"glosses":["to use"],"examples":[]}]}
+{"word":"lo","pos":"verb","forms":[{"form":"lo"}],"senses":[{"glosses":["to grind"],"examples":[]}]}
+{"word":"ló","pos":"verb","forms":[{"form":"lo"},{"form":"ló"}],"senses":[{"glosses":["to transplant"],"examples":[]}]}
+{"word":"sùn","pos":"verb","forms":[{"form":"sun"},{"form":"sùn"}],"senses":[{"glosses":["to sleep"],"examples":[]}]}
+{"word":"sun","pos":"verb","forms":[{"form":"sun"}],"senses":[{"glosses":["to roast; to burn"],"examples":[]}]}
+{"word":"sún","pos":"verb","forms":[{"form":"sun"},{"form":"sún"}],"senses":[{"glosses":["to move forward; to move backward"],"examples":[]}]}
+{"word":"ìgbà","pos":"noun","forms":[{"form":"igba"},{"form":"ìgbà"}],"senses":[{"glosses":["time; season"],"examples":[]}]}
+{"word":"igba","pos":"noun","forms":[{"form":"igba"}],"senses":[{"glosses":["two hundred"],"examples":[]}]}
+{"word":"igbá","pos":"noun","forms":[{"form":"igba"},{"form":"igbá"}],"senses":[{"glosses":["calabash"],"examples":[]}]}
+{"word":"ìgbá","pos":"noun","forms":[{"form":"igba"},{"form":"ìgbá"}],"senses":[{"glosses":["garden egg; eggplant"],"examples":[]}]}
+{"word":"ìfẹ́","pos":"noun","forms":[{"form":"ife"},{"form":"ìfẹ́"}],"senses":[{"glosses":["love; affection"],"examples":[]}]}
+{"word":"ifẹ́","pos":"noun","forms":[{"form":"ife"},{"form":"ifẹ́"}],"senses":[{"glosses":["love; desire"],"examples":[]}]}
+{"word":"Ife","pos":"noun","forms":[{"form":"ife"},{"form":"Ife"}],"senses":[{"glosses":["cup"],"examples":[]},{"glosses":["tumbler-shaped vessel"],"examples":[]},{"glosses":["whistling"],"examples":[]}]}
+{"word":"Iba","pos":"noun","forms":[{"form":"iba"},{"form":"Iba"}],"senses":[{"glosses":["loud sudden cry"],"examples":[]},{"glosses":["fall"],"examples":[]},{"glosses":["abuse"],"examples":[]},{"glosses":["curse; bleating"],"examples":[]}]}
+{"word":"iba","pos":"verb","forms":[{"form":"iba"}],"senses":[{"glosses":["to have fever; feverish"],"examples":[]},{"glosses":["just now"],"examples":[]}]}
+{"word":"ìlù","pos":"noun","forms":[{"form":"ilu"},{"form":"ìlù"}],"senses":[{"glosses":["drum"],"examples":[]}]}
+{"word":"ilu","pos":"noun","forms":[{"form":"ilu"}],"senses":[{"glosses":["awl; tool for piercing"],"examples":[]}]}
+{"word":"ìlú","pos":"noun","forms":[{"form":"ilu"},{"form":"ìlú"}],"senses":[{"glosses":["town; city; country"],"examples":[]}]}
+{"word":"òkò","pos":"noun","forms":[{"form":"oko"},{"form":"òkò"}],"senses":[{"glosses":["stone; missile; spear"],"examples":[]}]}
+{"word":"oko","pos":"noun","forms":[{"form":"oko"}],"senses":[{"glosses":["farm"],"examples":[]}]}
+{"word":"ọkọ","pos":"noun","forms":[{"form":"oko"},{"form":"ọkọ"}],"senses":[{"glosses":["husband"],"examples":[]}]}
+{"word":"ọkọ̀","pos":"noun","forms":[{"form":"oko"},{"form":"ọkọ̀"}],"senses":[{"glosses":["vehicle; boat"],"examples":[]}]}
+{"word":"àwọ̀","pos":"noun","forms":[{"form":"awo"},{"form":"àwọ̀"}],"senses":[{"glosses":["color; skin"],"examples":[]}]}
+{"word":"awo","pos":"noun","forms":[{"form":"awo"}],"senses":[{"glosses":["guinea fowl; cult; secret society; plate"],"examples":[]}]}
+{"word":"òru","pos":"noun","forms":[{"form":"oru"},{"form":"òru"}],"senses":[{"glosses":["night"],"examples":[]}]}
+{"word":"orù","pos":"noun","forms":[{"form":"oru"},{"form":"orù"}],"senses":[{"glosses":["pitcher; clay pot"],"examples":[]}]}
+{"word":"oru","pos":"noun","forms":[{"form":"oru"}],"senses":[{"glosses":["heat"],"examples":[]}]}
+{"word":"ìwà","pos":"noun","forms":[{"form":"iwa"},{"form":"ìwà"}],"senses":[{"glosses":["behavior; character"],"examples":[]}]}
+{"word":"iwà","pos":"noun","forms":[{"form":"iwa"},{"form":"iwà"}],"senses":[{"glosses":["existence; the act of coming"],"examples":[]}]}
+{"word":"ìtán","pos":"noun","forms":[{"form":"itan"},{"form":"ìtán"}],"senses":[{"glosses":["thigh"],"examples":[]}]}
+{"word":"ìtàn","pos":"noun","forms":[{"form":"itan"},{"form":"ìtàn"}],"senses":[{"glosses":["history; story"],"examples":[]}]}
+{"word":"àgbá","pos":"noun","forms":[{"form":"agba"},{"form":"àgbá"}],"senses":[{"glosses":["cannon"],"examples":[]}]}
+{"word":"àgbà","pos":"noun","forms":[{"form":"agba"},{"form":"àgbà"}],"senses":[{"glosses":["elder; adult"],"examples":[]}]}
+{"word":"ẹṣin","pos":"noun","forms":[{"form":"esin"},{"form":"ẹṣin"}],"senses":[{"glosses":["horse"],"examples":[]}]}
+{"word":"ẹṣìn","pos":"noun","forms":[{"form":"esin"},{"form":"ẹṣìn"}],"senses":[{"glosses":["religion"],"examples":[]}]}
+{"word":"ọrùn","pos":"noun","forms":[{"form":"orun"},{"form":"ọrùn"}],"senses":[{"glosses":["neck"],"examples":[]}]}
+{"word":"òòrùn","pos":"noun","forms":[{"form":"orun"},{"form":"òòrùn"}],"senses":[{"glosses":["sun; smell"],"examples":[]}]}
+{"word":"ọ̀run","pos":"noun","forms":[{"form":"orun"},{"form":"ọ̀run"}],"senses":[{"glosses":["heaven"],"examples":[]}]}
+{"word":"etí","pos":"noun","forms":[{"form":"eti"},{"form":"etí"}],"senses":[{"glosses":["ear"],"examples":[]}]}
+{"word":"èbí","pos":"noun","forms":[{"form":"ebi"},{"form":"èbí"}],"senses":[{"glosses":["guilt"],"examples":[]}]}
+{"word":"èbì","pos":"noun","forms":[{"form":"ebi"},{"form":"èbì"}],"senses":[{"glosses":["vomit"],"examples":[]}]}
+{"word":"kẹ̀kẹ́","pos":"noun","forms":[{"form":"keke"},{"form":"kẹ̀kẹ́"}],"senses":[{"glosses":["bicycle"],"examples":[]}]}
+{"word":"kẹ́kẹ́","pos":"noun","forms":[{"form":"keke"},{"form":"kẹ́kẹ́"}],"senses":[{"glosses":["facial marks"],"examples":[]}]}
+{"word":"òrò","pos":"noun","forms":[{"form":"oro"},{"form":"òrò"}],"senses":[{"glosses":["matter; speech"],"examples":[]}]}
+{"word":"oro","pos":"noun","forms":[{"form":"oro"}],"senses":[{"glosses":["word; speech"],"examples":[]}]}
+{"word":"óró","pos":"noun","forms":[{"form":"oro"},{"form":"óró"}],"senses":[{"glosses":["Òró deity; Òró festival"],"examples":[]}]}
+{"word":"àṣà","pos":"noun","forms":[{"form":"asa"},{"form":"àṣà"}],"senses":[{"glosses":["culture; custom"],"examples":[]}]}
+{"word":"asa","pos":"noun","forms":[{"form":"asa"}],"senses":[{"glosses":["shield"],"examples":[]}]}
+{"word":"ásá","pos":"noun","forms":[{"form":"asa"},{"form":"ásá"}],"senses":[{"glosses":["hawk"],"examples":[]}]}
+{"word":"ẹ̀kọ̀","pos":"noun","forms":[{"form":"eko"},{"form":"ẹ̀kọ̀"}],"senses":[{"glosses":["pap; cornmeal pudding"],"examples":[]}]}
+{"word":"ẹkọ","pos":"noun","forms":[{"form":"eko"},{"form":"ẹkọ"}],"senses":[{"glosses":["lesson; learning"],"examples":[]}]}
+{"word":"ẹ́kọ́","pos":"noun","forms":[{"form":"eko"},{"form":"ẹ́kọ́"}],"senses":[{"glosses":["education; lesson"],"examples":[]}]}
+{"word":"ìyà","pos":"noun","forms":[{"form":"iya"},{"form":"ìyà"}],"senses":[{"glosses":["suffering; punishment"],"examples":[]}]}
+{"word":"iya","pos":"noun","forms":[{"form":"iya"}],"senses":[{"glosses":["aunt on the mother's side"],"examples":[]}]}
+{"word":"íyá","pos":"noun","forms":[{"form":"iya"},{"form":"íyá"}],"senses":[{"glosses":["mother"],"examples":[]}]}
+{"word":"ìlé","pos":"noun","forms":[{"form":"ile"},{"form":"ìlé"}],"senses":[{"glosses":["house; home"],"examples":[]}]}
+{"word":"ile","pos":"noun","forms":[{"form":"ile"}],"senses":[{"glosses":["earth; ground"],"examples":[]}]}
+{"word":"ilé","pos":"noun","forms":[{"form":"ile"},{"form":"ilé"}],"senses":[{"glosses":["house; home"],"examples":[]}]}
+{"word":"ẹ̀rù","pos":"noun","forms":[{"form":"eru"},{"form":"ẹ̀rù"}],"senses":[{"glosses":["load; fear"],"examples":[]}]}
+{"word":"eru","pos":"noun","forms":[{"form":"eru"}],"senses":[{"glosses":["ash; cargo"],"examples":[]}]}
+{"word":"érú","pos":"noun","forms":[{"form":"eru"},{"form":"érú"}],"senses":[{"glosses":["slave"],"examples":[]}]}
+{"word":"àgbẹ̀","pos":"noun","forms":[{"form":"agbe"},{"form":"àgbẹ̀"}],"senses":[{"glosses":["farmer"],"examples":[]}]}
+{"word":"agbe","pos":"noun","forms":[{"form":"agbe"}],"senses":[{"glosses":["gourd; calabash container"],"examples":[]}]}
+{"word":"ágbẹ́","pos":"noun","forms":[{"form":"agbe"},{"form":"ágbẹ́"}],"senses":[{"glosses":["farmer"],"examples":[]}]}
+{"word":"àgbo","pos":"noun","forms":[{"form":"agbo"},{"form":"àgbo"}],"senses":[{"glosses":["ram"],"examples":[]}]}
+{"word":"agbo","pos":"noun","forms":[{"form":"agbo"}],"senses":[{"glosses":["herbal mixture"],"examples":[]}]}
+{"word":"ágbọ́","pos":"noun","forms":[{"form":"agbo"},{"form":"ágbọ́"}],"senses":[{"glosses":["flock; herd"],"examples":[]}]}
+{"word":"àbá","pos":"noun","forms":[{"form":"aba"},{"form":"àbá"}],"senses":[{"glosses":["suggestion; proposal"],"examples":[]}]}
+{"word":"aba","pos":"noun","forms":[{"form":"aba"}],"senses":[{"glosses":["hut; settlement"],"examples":[]}]}
+{"word":"ábá","pos":"noun","forms":[{"form":"aba"},{"form":"ábá"}],"senses":[{"glosses":["plan"],"examples":[]}]}
+{"word":"àdé","pos":"noun","forms":[{"form":"ade"},{"form":"àdé"}],"senses":[{"glosses":["arrival"],"examples":[]}]}
+{"word":"ade","pos":"noun","forms":[{"form":"ade"}],"senses":[{"glosses":["crown"],"examples":[]}]}
+{"word":"ádé","pos":"noun","forms":[{"form":"ade"},{"form":"ádé"}],"senses":[{"glosses":["crown"],"examples":[]}]}
+{"word":"ẹ̀wà","pos":"noun","forms":[{"form":"ewa"},{"form":"ẹ̀wà"}],"senses":[{"glosses":["beans"],"examples":[]}]}
+{"word":"ewa","pos":"noun","forms":[{"form":"ewa"}],"senses":[{"glosses":["beans"],"examples":[]}]}
+{"word":"ẹ́wà","pos":"noun","forms":[{"form":"ewa"},{"form":"ẹ́wà"}],"senses":[{"glosses":["beauty"],"examples":[]}]}
+{"word":"ọ̀rẹ̀","pos":"noun","forms":[{"form":"ore"},{"form":"ọ̀rẹ̀"}],"senses":[{"glosses":["friendship; favor"],"examples":[]}]}
+{"word":"ore","pos":"noun","forms":[{"form":"ore"}],"senses":[{"glosses":["kindness; goodness"],"examples":[]}]}
+{"word":"ọ́rẹ́","pos":"noun","forms":[{"form":"ore"},{"form":"ọ́rẹ́"}],"senses":[{"glosses":["friend"],"examples":[]}]}
+{"word":"ọ̀nà","pos":"noun","forms":[{"form":"ona"},{"form":"ọ̀nà"}],"senses":[{"glosses":["road; path; way"],"examples":[]}]}
+{"word":"ona","pos":"noun","forms":[{"form":"ona"}],"senses":[{"glosses":["design; pattern"],"examples":[]}]}
+{"word":"ọ́nà","pos":"noun","forms":[{"form":"ona"},{"form":"ọ́nà"}],"senses":[{"glosses":["craft; art; skill"],"examples":[]}]}
+{"word":"àrà","pos":"noun","forms":[{"form":"ara"},{"form":"àrà"}],"senses":[{"glosses":["wonder; marvel"],"examples":[]}]}
+{"word":"ara","pos":"noun","forms":[{"form":"ara"}],"senses":[{"glosses":["body"],"examples":[]}]}
+{"word":"árá","pos":"noun","forms":[{"form":"ara"},{"form":"árá"}],"senses":[{"glosses":["thunder; lightning"],"examples":[]}]}
+{"word":"ìgbẹ̀","pos":"noun","forms":[{"form":"igbe"},{"form":"ìgbẹ̀"}],"senses":[{"glosses":["bush; forest"],"examples":[]}]}
+{"word":"igbe","pos":"noun","forms":[{"form":"igbe"}],"senses":[{"glosses":["cry; shout"],"examples":[]}]}
+{"word":"ígbẹ́","pos":"noun","forms":[{"form":"igbe"},{"form":"ígbẹ́"}],"senses":[{"glosses":["excrement; feces"],"examples":[]}]}
+{"word":"ẹ̀gbẹ̀","pos":"noun","forms":[{"form":"egbe"},{"form":"ẹ̀gbẹ̀"}],"senses":[{"glosses":["side"],"examples":[]}]}
+{"word":"egbe","pos":"noun","forms":[{"form":"egbe"}],"senses":[{"glosses":["society; group"],"examples":[]}]}
+{"word":"ẹ́gbẹ́","pos":"noun","forms":[{"form":"egbe"},{"form":"ẹ́gbẹ́"}],"senses":[{"glosses":["group; association"],"examples":[]}]}
+{"word":"òde","pos":"noun","forms":[{"form":"ode"},{"form":"òde"}],"senses":[{"glosses":["outside; open place"],"examples":[]}]}
+{"word":"ode","pos":"noun","forms":[{"form":"ode"}],"senses":[{"glosses":["fool; simpleton"],"examples":[]}]}
+{"word":"ódẹ","pos":"noun","forms":[{"form":"ode"},{"form":"ódẹ"}],"senses":[{"glosses":["hunter"],"examples":[]}]}
+{"word":"àgbọ̀n","pos":"noun","forms":[{"form":"agbon"},{"form":"àgbọ̀n"}],"senses":[{"glosses":["basket"],"examples":[]}]}
+{"word":"agbọn","pos":"noun","forms":[{"form":"agbon"},{"form":"agbọn"}],"senses":[{"glosses":["coconut"],"examples":[]}]}
+{"word":"agbọ̀n","pos":"noun","forms":[{"form":"agbon"},{"form":"agbọ̀n"}],"senses":[{"glosses":["chin; jaw"],"examples":[]}]}
+{"word":"agbón","pos":"noun","forms":[{"form":"agbon"},{"form":"agbón"}],"senses":[{"glosses":["wasp"],"examples":[]}]}
+{"word":"ogun","pos":"noun","forms":[{"form":"ogun"}],"senses":[{"glosses":["war"],"examples":[]}]}
+{"word":"ògún","pos":"noun","forms":[{"form":"ogun"},{"form":"ògún"}],"senses":[{"glosses":["deity of iron"],"examples":[]}]}
+{"word":"ógun","pos":"noun","forms":[{"form":"ogun"},{"form":"ógun"}],"senses":[{"glosses":["twenty; inheritance"],"examples":[]}]}
+{"word":"oògùn","pos":"noun","forms":[{"form":"ogun"},{"form":"oogun"},{"form":"oògùn"}],"senses":[{"glosses":["medicine; charm"],"examples":[]}]}
+{"word":"ọ̀wọ̀","pos":"noun","forms":[{"form":"owo"},{"form":"ọ̀wọ̀"}],"senses":[{"glosses":["respect; honor"],"examples":[]}]}
+{"word":"ọwọ̀","pos":"noun","forms":[{"form":"owo"},{"form":"ọwọ̀"}],"senses":[{"glosses":["broom; flock"],"examples":[]}]}
+{"word":"ọwọ́","pos":"noun","forms":[{"form":"owo"},{"form":"ọwọ́"}],"senses":[{"glosses":["hand"],"examples":[]}]}
