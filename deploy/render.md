@@ -20,6 +20,20 @@ Render provides `DATABASE_URL` automatically from the managed PostgreSQL databas
 
 The deployment pins Python to `3.11.9` through `render.yaml` and `.python-version` files. This avoids Python 3.14 build failures from compiled dependencies such as `greenlet`.
 
+The Render web start command must only start the server:
+
+```bash
+python -m app.server
+```
+
+Migrations and seeding run through Render's pre-deploy command:
+
+```bash
+alembic upgrade head && python -m app.seed && python -m app.seed_enrichment && python -m app.backfill_aliases
+```
+
+Do not put the seed commands in the web start command. Render scans for an open port during startup; long seed commands can make deploys fail with `No open ports detected`.
+
 ## Backend URL
 
 After deploy, Render gives a backend URL like:
