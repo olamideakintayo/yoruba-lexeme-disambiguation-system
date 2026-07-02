@@ -50,6 +50,19 @@ Create a Vercel project from the same GitHub repo:
 
 If Vercel asks for a multi-service `vercel.json`, do not use the backend service template. The backend is deployed on Render, so Vercel should deploy only the `frontend` project. This repo includes `frontend/vercel.json` for the Vite frontend.
 
+If the keyboard does not show and search says `Failed to fetch`, check these two environment variables first:
+
+- In Vercel, `VITE_API_BASE_URL` must be the Render backend URL, for example:
+  ```env
+  VITE_API_BASE_URL=https://yoruba-lexeme-disambiguation-system.onrender.com
+  ```
+- In Render, `FRONTEND_ORIGIN` must be the Vercel frontend URL, for example:
+  ```env
+  FRONTEND_ORIGIN=https://your-vercel-app.vercel.app
+  ```
+
+After changing either variable, redeploy the affected service. Vite reads `VITE_API_BASE_URL` only at build time, so changing it in Vercel requires a new Vercel deployment.
+
 Deploy the frontend. Then copy the final Vercel URL back into Render as:
 
 ```env

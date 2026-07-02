@@ -26,10 +26,16 @@ app.add_middleware(
             "http://127.0.0.1:5173",
         }
     ),
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/")
+async def root() -> dict[str, str]:
+    return {"status": "ok", "service": "yoruba-lexeme-api"}
 
 
 @app.get("/api/health")
