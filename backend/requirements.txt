@@ -12,9 +12,9 @@ pytest-asyncio==0.24.0
 python-dotenv==1.0.1
 SQLAlchemy==2.0.35
 uvicorn[standard]==0.30.6
-winrt-runtime==3.2.1
-winrt-Windows.Foundation==3.2.1
-winrt-v Windows.Graphics.Imaging==3.2.1
-winrt-Windows.Media.Ocr==3.2.1
-winrt-Windows.Storage==3.2.1
-winrt-Windows.Storage.Streams==3.2.1
+winrt-runtime==3.2.1; platform_system == "Windows"
+winrt-Windows.Foundation==3.2.1; platform_system == "Windows"
+winrt-Windows.Graphics.Imaging==3.2.1; platform_system == "Windows"
+winrt-Windows.Media.Ocr==3.2.1; platform_system == "Windows"
+winrt-Windows.Storage==3.2.1; platform_system == "Windows"
+winrt-Windows.Storage.Streams==3.2.1; platform_system == "Windows"
