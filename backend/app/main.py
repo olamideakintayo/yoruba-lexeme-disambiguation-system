@@ -1,4 +1,6 @@
-from fastapi import Depends, FastAPI, HTTPException, Query
+from typing import Annotated
+
+from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -6,8 +8,26 @@ from app.config import get_settings
 from app.database import get_session
 from app.keyboard import CONTROL_KEYS, TONE_KEYS, YORUBA_ALPHABET
 from app.normalization import normalize_lookup
-from app.repository import YORUBA_ONLY_ERROR, get_lexeme, import_jsonl, search_tone_variants
-from app.schemas import KeyboardResponse, LexemeRead, SearchResponse, ToneVariantResult
+from app.repository import (
+    YORUBA_ONLY_ERROR,
+    create_custom_entry,
+    delete_custom_entry,
+    get_lexeme,
+    import_jsonl,
+    list_custom_entries,
+    search_tone_variants,
+    validate_custom_word,
+)
+from app.schemas import (
+    CustomEntryCreate,
+    CustomEntryRead,
+    KeyboardResponse,
+    LexemeRead,
+    SearchResponse,
+    ToneVariantResult,
+    WordValidationRequest,
+    WordValidationResponse,
+)
 
 settings = get_settings()
 
@@ -31,6 +51,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def require_admin_token(x_admin_token: Annotated[str | None, Header()] = None) -> None:
+    if not x_admin_token or x_admin_token != settings.admin_token:
+        raise HTTPException(status_code=401, detail="Invalid admin token.")
 
 
 @app.get("/")
@@ -88,6 +113,52 @@ async def lexeme_detail(
 async def import_dictionary(
     path: str,
     session: AsyncSession = Depends(get_session),
+    _: None = Depends(require_admin_token),
 ) -> dict[str, int]:
     count = await import_jsonl(session, __import__("pathlib").Path(path))
     return {"imported": count}
+
+
+@app.post("/api/admin/validate-word", response_model=WordValidationResponse)
+async def validate_word(
+    payload: WordValidationRequest,
+    session: AsyncSession = Depends(get_session),
+    _: None = Depends(require_admin_token),
+) -> WordValidationResponse:
+    return WordValidationResponse.model_validate(await validate_custom_word(session, payload.word))
+
+
+@app.get("/api/admin/custom-entries", response_model=list[CustomEntryRead])
+async def custom_entries(
+    session: AsyncSession = Depends(get_session),
+    _: None = Depends(require_admin_token),
+) -> list[CustomEntryRead]:
+    return [CustomEntryRead.model_validate(entry) for entry in await list_custom_entries(session)]
+
+
+@app.post("/api/admin/custom-entries", response_model=CustomEntryRead)
+async def add_custom_entry(
+    payload: CustomEntryCreate,
+    session: AsyncSession = Depends(get_session),
+    _: None = Depends(require_admin_token),
+) -> CustomEntryRead:
+    try:
+        entry = await create_custom_entry(session, payload.model_dump())
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return CustomEntryRead.model_validate(entry)
+
+
+@app.delete("/api/admin/custom-entries/{lexeme_id}")
+async def remove_custom_entry(
+    lexeme_id: str,
+    session: AsyncSession = Depends(get_session),
+    _: None = Depends(require_admin_token),
+) -> dict[str, bool]:
+    try:
+        deleted = await delete_custom_entry(session, lexeme_id)
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Custom entry not found.")
+    return {"deleted": True}

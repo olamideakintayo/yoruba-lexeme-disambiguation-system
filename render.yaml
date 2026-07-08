@@ -19,6 +19,8 @@ services:
           property: connectionString
       - key: FRONTEND_ORIGIN
         value: https://your-vercel-app.vercel.app
+      - key: ADMIN_TOKEN
+        value: change-me
       - key: PYTHON_VERSION
         value: 3.11.9
       - key: HOST

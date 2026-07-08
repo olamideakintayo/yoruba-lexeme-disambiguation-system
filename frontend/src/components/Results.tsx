@@ -75,7 +75,9 @@ export function Results({ results, query, loading, error }: Props) {
               </div>
             ) : null}
 
-            {result.source ? <p className="source-label">{result.source}</p> : null}
+            {result.source ? (
+              <p className="source-label">{result.source === 'Custom User Entries' ? 'Custom entry' : result.source}</p>
+            ) : null}
           </article>
         );
       })}

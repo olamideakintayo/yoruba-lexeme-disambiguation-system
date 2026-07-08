@@ -55,3 +55,35 @@ export type KeyboardResponse = {
   tones: Array<{ label: string; mark: string; example: string }>;
   controls: Array<{ label: string; action: string }>;
 };
+
+export type CustomEntry = {
+  id: string;
+  word: string;
+  normalized_form: string;
+  tone_pattern: string;
+  tone_label: string;
+  meaning: string;
+  part_of_speech?: string | null;
+  examples: Array<Record<string, string>>;
+};
+
+export type CustomEntryInput = {
+  word: string;
+  meaning: string;
+  tone_pattern?: string | null;
+  part_of_speech?: string | null;
+  example_text?: string | null;
+  example_english?: string | null;
+  allow_override: boolean;
+};
+
+export type WordValidationResponse = {
+  word: string;
+  normalized_form: string;
+  tone_pattern: string;
+  tone_label: string;
+  is_valid_yoruba: boolean;
+  related_dictionary_entries: number;
+  can_save_without_override: boolean;
+  warning?: string | null;
+};

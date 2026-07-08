@@ -5,9 +5,12 @@ import os
 import sys
 
 import uvicorn
+from dotenv import load_dotenv
 
 
 def main() -> None:
+    load_dotenv()
+
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 

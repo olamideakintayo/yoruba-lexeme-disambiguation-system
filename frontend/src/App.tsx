@@ -1,6 +1,8 @@
 import { Search } from 'lucide-react';
 import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { getKeyboard, searchLexemes } from './api';
+import { CustomEntries } from './components/CustomEntries';
+import { ManageWords } from './components/ManageWords';
 import { Results } from './components/Results';
 import { Scene } from './components/Scene';
 import { YorubaKeyboard } from './components/YorubaKeyboard';
@@ -8,6 +10,7 @@ import { applyCombiningMark, applyDotBelow } from './text';
 import type { KeyboardResponse, SearchResponse } from './types';
 
 function App() {
+  const [view, setView] = useState<'search' | 'manage' | 'custom'>('search');
   const [query, setQuery] = useState('');
   const [keyboard, setKeyboard] = useState<KeyboardResponse | null>(null);
   const [response, setResponse] = useState<SearchResponse | null>(null);
@@ -73,60 +76,78 @@ function App() {
           <span className="status">PostgreSQL · FastAPI · React</span>
         </header>
 
-        <section className="workspace">
-          <div className="search-panel">
-            <div className="search-form">
-              <label htmlFor="search">Yoruba word</label>
-              <div className="search-row">
-                <input
-                  id="search"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  onKeyDown={onSearchKeyDown}
-                  placeholder="owo, owó, ọwọ, àpá..."
-                  autoComplete="off"
-                />
-                <button type="button" aria-label="Search" onClick={() => void runSearch(query)}>
-                  <Search size={20} />
-                </button>
-              </div>
-            </div>
+        <nav className="menu-bar" aria-label="Primary">
+          <button className={view === 'search' ? 'active' : ''} type="button" onClick={() => setView('search')}>
+            Search
+          </button>
+          <button className={view === 'manage' ? 'active' : ''} type="button" onClick={() => setView('manage')}>
+            Add Word
+          </button>
+          <button className={view === 'custom' ? 'active' : ''} type="button" onClick={() => setView('custom')}>
+            Custom Entries
+          </button>
+        </nav>
 
-            <YorubaKeyboard
-              keyboard={keyboard}
-              onInsert={(value) => setQuery((current) => `${current}${value}`)}
-              onTone={(mark) => setQuery((current) => applyCombiningMark(current, mark))}
-              onAction={handleAction}
-            />
-
-            <div className="quick-lists">
-              <div>
-                <h2>Suggestions</h2>
-                <div className="chips">
-                  {suggestions.map((item) => (
-                    <button type="button" key={item} onClick={() => void runSearch(item)}>
-                      {item}
-                    </button>
-                  ))}
+        {view === 'search' ? (
+          <section className="workspace">
+            <div className="search-panel">
+              <div className="search-form">
+                <label htmlFor="search">Yoruba word</label>
+                <div className="search-row">
+                  <input
+                    id="search"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    onKeyDown={onSearchKeyDown}
+                    placeholder="owo, owó, ọwọ, àpá..."
+                    autoComplete="off"
+                  />
+                  <button type="button" aria-label="Search" onClick={() => void runSearch(query)}>
+                    <Search size={20} />
+                  </button>
                 </div>
               </div>
-              <div>
-                <h2>Recent</h2>
-                <div className="chips">
-                  {recent.map((item) => (
-                    <button type="button" key={item} onClick={() => void runSearch(item)}>
-                      {item}
-                    </button>
-                  ))}
+
+              <YorubaKeyboard
+                keyboard={keyboard}
+                onInsert={(value) => setQuery((current) => `${current}${value}`)}
+                onTone={(mark) => setQuery((current) => applyCombiningMark(current, mark))}
+                onAction={handleAction}
+              />
+
+              <div className="quick-lists">
+                <div>
+                  <h2>Suggestions</h2>
+                  <div className="chips">
+                    {suggestions.map((item) => (
+                      <button type="button" key={item} onClick={() => void runSearch(item)}>
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h2>Recent</h2>
+                  <div className="chips">
+                    {recent.map((item) => (
+                      <button type="button" key={item} onClick={() => void runSearch(item)}>
+                        {item}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
+
+              {error ? <p className="error">{error}</p> : null}
             </div>
 
-            {error ? <p className="error">{error}</p> : null}
-          </div>
-
-          <Results results={response?.results ?? []} query={response?.query ?? query} loading={loading} error={error} />
-        </section>
+            <Results results={response?.results ?? []} query={response?.query ?? query} loading={loading} error={error} />
+          </section>
+        ) : view === 'manage' ? (
+          <ManageWords keyboard={keyboard} />
+        ) : (
+          <CustomEntries />
+        )}
       </section>
     </main>
   );

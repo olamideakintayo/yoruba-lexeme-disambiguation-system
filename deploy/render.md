@@ -14,7 +14,11 @@ Use Render for the FastAPI backend and managed PostgreSQL. Use Vercel for the Re
    ```env
    FRONTEND_ORIGIN=https://your-vercel-app.vercel.app
    ```
-6. Deploy the blueprint.
+6. Replace the placeholder `ADMIN_TOKEN` value with a strong shared secret:
+   ```env
+   ADMIN_TOKEN=your-strong-shared-secret
+   ```
+7. Deploy the blueprint.
 
 Render provides `DATABASE_URL` automatically from the managed PostgreSQL database. The backend converts Render's `postgresql://` URL into SQLAlchemy's async `postgresql+psycopg://` format at startup.
 
@@ -85,6 +89,10 @@ FRONTEND_ORIGIN=https://your-vercel-app.vercel.app
 
 Redeploy the Render backend after changing `FRONTEND_ORIGIN`.
 
+## Custom Word Manager
+
+The `Manage Words` page uses the shared `ADMIN_TOKEN`. Give that token only to trusted admins. Custom entries are stored globally in the Render PostgreSQL database and appear below built-in dictionary results.
+
 ## About The 21-Hour Reboot
 
 Do not use the EC2 reboot cron on Render. Render manages the container lifecycle and may restart services automatically. If a scheduled refresh is still needed later, use a Render cron job or external uptime monitor to call a health endpoint, but do not try to reboot the server because there is no EC2 server to reboot.
@@ -92,4 +100,4 @@ Do not use the EC2 reboot cron on Render. Render manages the container lifecycle
 ## Notes
 
 - Render free services can sleep after inactivity, so the first request may be slow.
-- The backend start command runs migrations and dictionary seed scripts on each deploy. The import code is idempotent, so redeploys keep the database usable.
+- The backend pre-deploy command runs migrations and dictionary seed scripts on each deploy. The import code is idempotent, so redeploys keep the database usable.

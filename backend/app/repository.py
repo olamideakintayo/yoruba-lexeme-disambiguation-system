@@ -26,8 +26,10 @@ SOURCE_PRIORITY = {
     "Online Yoruba Enrichment": 0,
     "Dictionary of the Yoruba Language": 1,
     "Kaikki/Wiktextract": 2,
+    "Custom User Entries": 3,
 }
-YORUBA_SEARCH_SOURCES = {"Online Yoruba Enrichment", "Dictionary of the Yoruba Language"}
+CUSTOM_SOURCE_NAME = "Custom User Entries"
+YORUBA_SEARCH_SOURCES = {"Online Yoruba Enrichment", "Dictionary of the Yoruba Language", CUSTOM_SOURCE_NAME}
 YORUBA_ONLY_ERROR = "Only Yoruba dictionary words can be searched."
 IGNORED_SEARCH_NORMALIZED_FORMS = {"am", "go"}
 
@@ -43,6 +45,7 @@ POS_LABELS = {
     "inter": "interjection",
     "part": "particle",
 }
+VALID_TONES = {"low", "mid", "high"}
 
 
 def source_priority(lexeme: Lexeme) -> int:
@@ -51,11 +54,29 @@ def source_priority(lexeme: Lexeme) -> int:
     return SOURCE_PRIORITY.get(lexeme.source.name, 5)
 
 
+def is_custom_lexeme(lexeme: Lexeme) -> bool:
+    return lexeme.source is not None and lexeme.source.name == CUSTOM_SOURCE_NAME
+
+
 def normalize_pos(value: str | None) -> str | None:
     if not value:
         return None
     cleaned = value.strip().casefold().rstrip(".")
     return POS_LABELS.get(cleaned, cleaned)
+
+
+def normalize_tone_pattern(value: str | None, fallback_word: str) -> str:
+    cleaned = (value or "").strip().casefold()
+    if not cleaned:
+        return detect_tone_pattern(fallback_word)
+    parts = [part.strip() for part in cleaned.replace(" ", "-").split("-") if part.strip()]
+    if not parts or any(part not in VALID_TONES for part in parts):
+        raise ValueError("Tone pattern must use low, mid, or high joined with hyphens, for example mid-high.")
+    return "-".join(parts)
+
+
+def tone_label_from_pattern(pattern: str, word: str) -> str:
+    return pattern if pattern and pattern != "undetermined" else tone_label(word)
 
 
 def is_ascii_plain_query(value: str) -> bool:
@@ -98,6 +119,27 @@ def display_word_for_lexeme(lexeme: Lexeme, normalized_query: str) -> str | None
     return None
 
 
+def preferred_word_form(
+    lexeme: Lexeme,
+    display_word: str | None = None,
+    normalized_query: str | None = None,
+) -> WordForm | None:
+    if not lexeme.word_forms:
+        return None
+
+    canonical = canonicalize(display_word or lexeme.canonical_form)
+    normalized = normalized_query or normalize_lookup(canonical)
+    forms = sorted(lexeme.word_forms, key=lambda form: (form.surface_form.casefold(), form.id or ""))
+
+    for form in forms:
+        if canonicalize(form.surface_form) == canonical:
+            return form
+    for form in forms:
+        if form.normalized_form == normalized:
+            return form
+    return forms[0]
+
+
 def lexeme_options() -> tuple:
     return (
         selectinload(Lexeme.source),
@@ -122,6 +164,16 @@ async def get_or_create_source(
     session.add(source)
     await session.flush()
     return source
+
+
+async def get_custom_source(session: AsyncSession) -> Source:
+    return await get_or_create_source(
+        session,
+        name=CUSTOM_SOURCE_NAME,
+        url=None,
+        license_name="User-provided custom entries",
+        metadata={"source_type": "custom_user_entry"},
+    )
 
 
 async def import_entry(session: AsyncSession, entry: dict[str, Any], source: Source) -> Lexeme:
@@ -262,6 +314,146 @@ async def backfill_word_form_aliases(session: AsyncSession) -> int:
     return len(word_forms)
 
 
+def custom_entry_payload(lexeme: Lexeme) -> dict[str, Any]:
+    word = canonicalize(lexeme.canonical_form)
+    first_form = preferred_word_form(lexeme, word)
+    first_sense = lexeme.senses[0] if lexeme.senses else None
+    examples = [example for example in ((first_sense.examples if first_sense else []) or []) if isinstance(example, dict)]
+    tone_pattern = first_form.tone_pattern if first_form and first_form.tone_pattern else detect_tone_pattern(word)
+    return {
+        "id": lexeme.id,
+        "word": word,
+        "normalized_form": lexeme.normalized_form,
+        "tone_pattern": tone_pattern,
+        "tone_label": tone_label_from_pattern(tone_pattern, word),
+        "meaning": first_sense.definition if first_sense else "",
+        "part_of_speech": first_sense.part_of_speech if first_sense else None,
+        "examples": examples,
+    }
+
+
+async def validate_custom_word(session: AsyncSession, word: str) -> dict[str, Any]:
+    canonical = canonicalize(word)
+    normalized = normalize_lookup(canonical)
+    is_valid = bool(canonical) and not is_noisy_ocr_word(canonical) and is_displayable_yoruba_word(canonical)
+    related_count = 0
+    if normalized:
+        result = await session.execute(
+            select(Lexeme.id)
+            .join(Source)
+            .where(Lexeme.normalized_form == normalized, Source.name != CUSTOM_SOURCE_NAME)
+            .limit(100)
+        )
+        related_count = len(result.scalars().all())
+
+    warning = None
+    if not is_valid:
+        warning = "Enter a valid Yoruba word without OCR artifacts."
+    elif related_count == 0:
+        warning = "This normalized spelling was not found in the existing dictionary. Enable override to save it."
+
+    return {
+        "word": canonical,
+        "normalized_form": normalized,
+        "tone_pattern": detect_tone_pattern(canonical),
+        "tone_label": tone_label(canonical),
+        "is_valid_yoruba": is_valid,
+        "related_dictionary_entries": related_count,
+        "can_save_without_override": is_valid and related_count > 0,
+        "warning": warning,
+    }
+
+
+async def list_custom_entries(session: AsyncSession) -> list[dict[str, Any]]:
+    result = await session.execute(
+        select(Lexeme)
+        .options(*lexeme_options())
+        .join(Source)
+        .where(Source.name == CUSTOM_SOURCE_NAME)
+        .order_by(Lexeme.created_at.desc(), Lexeme.canonical_form)
+    )
+    return [custom_entry_payload(lexeme) for lexeme in result.scalars().unique().all()]
+
+
+async def create_custom_entry(session: AsyncSession, payload: dict[str, Any]) -> dict[str, Any]:
+    word = canonicalize(payload.get("word") or "")
+    meaning = (payload.get("meaning") or "").strip()
+    part_of_speech = normalize_pos(payload.get("part_of_speech"))
+    tone_pattern = normalize_tone_pattern(payload.get("tone_pattern"), word)
+    allow_override = bool(payload.get("allow_override"))
+    if not word:
+        raise ValueError("Word is required.")
+    if not meaning:
+        raise ValueError("Meaning is required.")
+
+    validation = await validate_custom_word(session, word)
+    if not validation["is_valid_yoruba"]:
+        raise ValueError(validation["warning"] or "Enter a valid Yoruba word.")
+    if validation["related_dictionary_entries"] == 0 and not allow_override:
+        raise ValueError(validation["warning"] or "Enable override to save this word.")
+
+    duplicate_result = await session.execute(
+        select(Lexeme)
+        .options(*lexeme_options())
+        .join(Source)
+        .where(Source.name == CUSTOM_SOURCE_NAME, Lexeme.canonical_form == word)
+    )
+    normalized_meaning = meaning.casefold()
+    normalized_pos = (part_of_speech or "").casefold()
+    for lexeme in duplicate_result.scalars().unique().all():
+        for sense in lexeme.senses:
+            if (
+                sense.definition.strip().casefold() == normalized_meaning
+                and (sense.part_of_speech or "").casefold() == normalized_pos
+            ):
+                raise ValueError("This custom entry already exists.")
+
+    source = await get_custom_source(session)
+    lexeme = Lexeme(canonical_form=word, normalized_form=validation["normalized_form"], source=source)
+    session.add(lexeme)
+    await session.flush()
+
+    word_form = WordForm(
+        lexeme=lexeme,
+        surface_form=word,
+        normalized_form=validation["normalized_form"],
+        tone_pattern=tone_pattern,
+        diacritics=describe_diacritics(word),
+    )
+    session.add(word_form)
+    await session.flush()
+    await upsert_word_form_aliases(session, word_form)
+
+    examples = []
+    example_text = (payload.get("example_text") or "").strip()
+    example_english = (payload.get("example_english") or "").strip()
+    if example_text:
+        example: dict[str, str] = {"text": example_text}
+        if example_english:
+            example["english"] = example_english
+        examples.append(example)
+
+    session.add(Sense(lexeme=lexeme, part_of_speech=part_of_speech, definition=meaning, examples=examples))
+    await session.commit()
+    await session.refresh(lexeme)
+    result = await session.execute(select(Lexeme).options(*lexeme_options()).where(Lexeme.id == lexeme.id))
+    return custom_entry_payload(result.scalar_one())
+
+
+async def delete_custom_entry(session: AsyncSession, lexeme_id: str) -> bool:
+    result = await session.execute(
+        select(Lexeme).options(*lexeme_options()).where(Lexeme.id == lexeme_id)
+    )
+    lexeme = result.scalar_one_or_none()
+    if lexeme is None:
+        return False
+    if not is_custom_lexeme(lexeme):
+        raise PermissionError("Only custom entries can be deleted.")
+    await session.delete(lexeme)
+    await session.commit()
+    return True
+
+
 async def search_lexemes(session: AsyncSession, query: str, limit: int = 20) -> tuple[list[dict[str, Any]], list[str]]:
     normalized_query = normalize_lookup(query)
     alias_queries = search_aliases(query)
@@ -373,21 +565,31 @@ async def search_tone_variants(session: AsyncSession, query: str, limit: int = 4
     )
     lexemes = result.scalars().unique().all()
 
-    variants_by_word: dict[str, dict[str, Any]] = {}
+    variants_by_word: dict[tuple[str, str, str], dict[str, Any]] = {}
     for lexeme in lexemes:
         word = display_word_for_lexeme(lexeme, normalized_query)
         if word is None:
             continue
 
-        pattern = detect_tone_pattern(word)
-        word_key = word.casefold()
+        is_custom = is_custom_lexeme(lexeme)
+        custom_form = preferred_word_form(lexeme, word, normalized_query) if is_custom else None
+        pattern = (
+            custom_form.tone_pattern
+            if custom_form is not None and custom_form.tone_pattern
+            else detect_tone_pattern(word)
+        )
+        word_key = (
+            word.casefold(),
+            CUSTOM_SOURCE_NAME if is_custom else "built_in",
+            lexeme.id if is_custom else "",
+        )
         existing = variants_by_word.get(word_key)
         if existing is None:
             existing = {
                 "word": word,
                 "normalized_form": normalized_query,
                 "tone_pattern": pattern,
-                "tone_label": tone_label(word),
+                "tone_label": tone_label_from_pattern(pattern, word),
                 "meaning": "",
                 "meanings": [],
                 "part_of_speech": None,
@@ -399,7 +601,7 @@ async def search_tone_variants(session: AsyncSession, query: str, limit: int = 4
         elif source_priority(lexeme) < existing["source_priority"]:
             existing["word"] = word
             existing["tone_pattern"] = pattern
-            existing["tone_label"] = tone_label(word)
+            existing["tone_label"] = tone_label_from_pattern(pattern, word)
             existing["source"] = lexeme.source.name if lexeme.source else None
             existing["source_priority"] = source_priority(lexeme)
 

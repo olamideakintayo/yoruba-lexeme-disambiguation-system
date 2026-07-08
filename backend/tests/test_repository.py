@@ -4,6 +4,8 @@ from app.repository import (
     display_word_for_lexeme,
     is_ascii_plain_query,
     is_noisy_ocr_word,
+    normalize_tone_pattern,
+    preferred_word_form,
     source_priority,
 )
 
@@ -53,3 +55,28 @@ def test_is_ascii_plain_query_detects_unmarked_input() -> None:
     assert is_ascii_plain_query("IBA") is True
     assert is_ascii_plain_query("ẹṣin") is False
     assert is_ascii_plain_query("owó") is False
+
+
+def test_normalize_tone_pattern_accepts_manual_admin_tones() -> None:
+    assert normalize_tone_pattern("mid-high", "owo") == "mid-high"
+    assert normalize_tone_pattern("Low High", "owo") == "low-high"
+    assert normalize_tone_pattern("", "ow\u00f3") == "mid-high"
+
+
+def test_normalize_tone_pattern_rejects_unknown_tones() -> None:
+    try:
+        normalize_tone_pattern("middle-high", "owo")
+    except ValueError as error:
+        assert "low, mid, or high" in str(error)
+    else:
+        raise AssertionError("Expected invalid tone pattern to fail")
+
+
+def test_preferred_word_form_uses_matching_custom_surface_for_tone() -> None:
+    lexeme = Lexeme(canonical_form="\u00f3w\u00f3", normalized_form="owo")
+    lexeme.word_forms = [
+        WordForm(surface_form="owo", normalized_form="owo", tone_pattern="mid-mid"),
+        WordForm(surface_form="\u00f3w\u00f3", normalized_form="owo", tone_pattern="high-high"),
+    ]
+
+    assert preferred_word_form(lexeme, "\u00f3w\u00f3", "owo").tone_pattern == "high-high"
